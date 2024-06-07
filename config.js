@@ -10,8 +10,7 @@ import moment from 'moment-timezone'
 //*꒷꒦꒷꒷꒦꒷꒦꒷꒷꒦꒷꒦꒷꒦꒷꒷꒦꒷꒷꒦꒷꒷꒦꒷꒦꒷꒦꒷꒦꒷*
 
 global.owner = [
-  ['5218261275256', 'おDanịel.xyz⁩', true],
-  ['5492616532494', 'Samuel Fts', true],
+  ['595993317736', 'Owner⁩', true],
   ['51910108980'],
   ['5218139760662'],
   ['5218132588591'],
@@ -30,7 +29,7 @@ global.prems = []
 //*꒷꒦꒷꒷꒦꒷꒦꒷꒷꒦꒷꒦꒷꒦꒷꒷꒦꒷꒷꒦꒷꒷꒦꒷꒦꒷꒦꒷꒦꒷*
 
 global.packname = `Sumi Sakurasawa - MD`
-global.author = 'おDanịel.xyz'
+global.author = 'Bot de WhatsApp'
 global.botname = 'Sumi Sakurasawa - MD'
 global.textbot = `© 2024 Starlights Team | All rights reserved`
 
