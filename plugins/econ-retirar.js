@@ -6,7 +6,7 @@ let handler = async (m, { args }) => {
    if (args[0] == '--all') {
       let count = parseInt(user.bank);
       user.bank -= count * 1
-      user.coin += count * 1
+      user.limit += count * 1
       await m.reply(`*Retiraste ${count} de Coins del Banco.* 💸`);
       return !0
    }
@@ -15,7 +15,7 @@ let handler = async (m, { args }) => {
    if (!user.bank) return m.reply('[😿] No tienes *Coins* en Banco.')
    if (user.bank < count) return m.reply(`[❌] Solo tienes ${user.bank} de *Coins* en el Banco.`)
    user.bank -= count * 1
-   user.coin += count * 1
+   user.limit += count * 1
    await m.reply(`*Retiraste ${count} de Coins del Banco.* 💸`)
 }
 
