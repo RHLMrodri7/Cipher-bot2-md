@@ -11,14 +11,14 @@ let handler = async (m, { conn, usedPrefix, command }) => {
   }
    let work = works.getRandom()
    user.limit += amount
-   await m.reply(`${work} *${amount} 🍬 Dulces.*`)
+   await m.reply(`${work} *${amount} 🪙 Coins.*`)
    cooldowns[m.sender] = Date.now()
 }
 
 handler.help = ['work']
 handler.tags = ['rpg']
 handler.command = ['work', 'trabajar', 'w']
-handler.register = true 
+handler.register = false
 export default handler
 
 function segundosAHMS(segundos) {
