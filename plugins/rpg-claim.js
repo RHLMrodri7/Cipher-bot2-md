@@ -9,15 +9,15 @@ let handler = async (m) => {
     return
   }
   
-   let claim = `Felicidades 🎉, reclamaste *20 🍬 Dulces*.`
-   user.limit += 20
+   let claim = `Felicidades 🎉, reclamaste *🪙 Coins*.`
+   user.limit += 500
    await m.reply(claim)
    cooldowns[m.sender] = Date.now()
 }
 handler.help = ['claim']
 handler.tags = ['rpg']
 handler.command = ['daily', 'claim']
-handler.register = true 
+handler.register = false 
 
 export default handler
 
