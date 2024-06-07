@@ -32,7 +32,7 @@ const defaultMenu = {
 
 ╭──⬣「 *Info User* 」⬣
 │  ≡◦ *🍭 Nombre ∙* %name
-│  ≡◦ *🍬 Dulces ∙* %limit
+│  ≡◦ *🪙 Coins ∙* %limit
 │  ≡◦ *💫 XP ∙* %totalexp
 │  ≡◦ *🐢 Nivel ∙* %level
 ╰──⬣
