@@ -45,7 +45,9 @@ export async function handler(chatUpdate) {
                 if (!isNumber(user.exp))
                     user.exp = 0
 		if (!isNumber(user.bank))
-                    user.bank = 0   
+                    user.bank = 0 
+		if (!isNumber(user.bank))
+                    user.lasCrime = 0
                 if (!isNumber(user.limit))
                     user.limit = 20
                 if (!('registered' in user))
@@ -80,6 +82,7 @@ export async function handler(chatUpdate) {
                 global.db.data.users[m.sender] = {
                     exp: 0,
 		    bank: 0,
+                    lasCrime: 0,
                     limit: 20,
                     registered: false,
                     name: m.name,
