@@ -46,7 +46,7 @@ export async function handler(chatUpdate) {
                     user.exp = 0
 		if (!isNumber(user.bank))
                     user.bank = 0 
-		if (!isNumber(user.bank))
+		if (!isNumber(user.lasCrime))
                     user.lasCrime = 0
                 if (!isNumber(user.limit))
                     user.limit = 20
