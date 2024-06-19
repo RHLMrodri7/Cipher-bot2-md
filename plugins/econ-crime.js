@@ -1,20 +1,20 @@
 let handler = async (m) => {
-  let time = global.db.data.users[m.sender].lasCrime + 7200000;
+  let time = global.db.data.users[m.sender].lasCrime + 7200000000;
   if (new Date() - global.db.data.users[m.sender].lasCrime < 7200000)
     throw `*𝙴𝚜𝚝𝚊𝚜 𝚌𝚊𝚗𝚜𝚊𝚍𝚘, 𝚍𝚎𝚋𝚎𝚜 𝚍𝚎𝚜𝚌𝚊𝚗𝚜𝚊𝚛 𝚌𝚘𝚖𝚘 𝚖𝚒𝚗𝚒𝚖𝚘 ${msToTime(time - new Date())} 𝚙𝚊𝚛𝚊 𝚟𝚘𝚕𝚟𝚎𝚛 𝚊 cometer un crimen!*`;
   let result = Math.floor(Math.random() * 10);
   let reward = Math.floor(Math.random() * 20);
   if (result > 6) {
-    m.reply(`Tu robo resultó exitoso; de una manera u otra, obtuviste: $${reward} *DOLARES*`);
-    global.db.data.users[m.sender].exp += reward * 1;
+    m.reply(`Tu robo resultó exitoso; de una manera u otra, obtuviste: $${reward} *Coins*`);
+    global.db.data.users[m.sender].limit += reward * 1;
     global.db.data.users[m.sender].lasCrime = new Date() * 1;
   } else {
     m.reply(
       `¡Tu intento de robo se vio frustrado cuando la policía confiscó lo que habías tomado y te impuso una comisión equivalente a la mitad del dinero robado por tu liberación! Te quitaron: $${
         reward / 2
-      } *DOLARES*`
+      } *Coins*`
     );
-    global.db.data.users[m.sender].exp -= Math.floor((reward / 2) * 1);
+    global.db.data.users[m.sender].limit -= Math.floor((reward / 2) * 1);
     global.db.data.users[m.sender].lasCrime = new Date() * 1;
   }
 };
