@@ -1,73 +1,54 @@
+//import db from '../lib/database.js'
 
-let poin = 200
-let cooldown = 15000
-let handler = async (m, { conn, args, usedPrefix, command }) => {
-    
-    let reseqv = `✳️ ${mssg.ppt(usedPrefix, command)}`
-    if (!args[0]) throw reseqv
-    let text = args[0].toLowerCase()
-    let user = global.db.data.users[m.sender]
-    if (new Date - user.lastppt < cooldown) throw `⏱️ ${mssg.pptCd} *${msToTime((user.lastppt + cooldown) - new Date())}*`
-    if (user.limit < poin) return m.reply(`✳️ ${mssg.coinNan}`) 
+let handler = async (m, { conn, text, usedPrefix, command }) => {
+    let poin = 300
+    let reseqv = `✳️ Seleccione piedra/papel/tijera\n\nEjemplo : *${usedPrefix + command}* papel\n`
+    if (!text) throw reseqv
     var astro = Math.random()
-    
+
     if (astro < 0.34) {
-        astro = `${mssg.stone}`
+        astro = 'piedra'
     } else if (astro > 0.34 && astro < 0.67) {
-        astro = `${mssg.sciss}`
+        astro = 'tijera'
     } else {
-        astro = `${mssg.paper}`
-    } 
-    
-    user.lastppt = new Date * 1
+        astro = 'papel'
+    }
+
 
     if (text == astro) {
-      user.limit += 10
-        m.reply(`  ▢ 🪨  📄  ✂️\n\n‣ ${mssg.you} : ${text}\n‣ ${botName}: ${astro}\n\n🎁 ${mssg.tie} *+10 🪙*`)
-    } else if (text == `${mssg.stone}`) {
-        if (astro == `${mssg.sciss}`) {
-            user.limit += poin
-            m.reply(`  ▢ 🪨  📄  ✂️\n\n‣ ${mssg.you} : ${text}\n‣ ${botName}: ${astro}\n\n🎁 ${mssg.win} *+${poin} 🪙*`)
+      global.db.data.users[m.sender].exp += 100
+        m.reply(`▢ *Empate*\n\n‣ Tú : ${text}\n‣ DyLux : ${astro}\n\n🎁 Puntos (±)100 XP`)
+    } else if (text == 'piedra') {
+        if (astro == 'tijera') {
+            global.db.data.users[m.sender].exp += 300
+            m.reply(`▢ *Ganaste* 🎊\n\n‣ Tú : ${text}\n‣ DyLux : ${astro}\n\n🎁 Puntos *+${poin} XP*`)
         } else {
-          user.limit -= poin
-            m.reply(`  ▢ 🪨  📄  ✂️\n\n‣ ${mssg.you} : ${text}\n‣ ${botName}: ${astro}\n\n😔 ${mssg.lost} *-${poin} 🪙*`)
+          global.db.data.users[m.sender].exp -= 300
+            m.reply(`▢ *Perdiste*\n\n‣ Tú : ${text}\n‣ DyLux : ${astro}\n\n Puntos *-${poin} XP*`)
         }
-    } else if (text == `${mssg.sciss}`) {
-        if (astro == `${mssg.paper}`) {
-            user.limit += poin
-            m.reply(`  ▢ 🪨  📄  ✂️\n\n‣ ${mssg.you} : ${text}\n‣ ${botName}: ${astro}\n\n🎁 ${mssg.win} *+${poin} 🪙*`)
+    } else if (text == 'tijera') {
+        if (astro == 'papel') {
+            global.db.data.users[m.sender].exp += 300
+            m.reply(`▢ *Ganaste* 🎊\n\n‣ Tú : ${text}\n‣ DyLux : ${astro}\n\n🎁 Puntos *+${poin} XP*`)
         } else {
-          user.limit -= poin
-            m.reply(`  ▢ 🪨  📄  ✂️\n\n‣ ${mssg.you} : ${text}\n‣ ${botName}: ${astro}\n\n😔 ${mssg.lost} *-${poin} 🪙*`)
+          global.db.data.users[m.sender].exp -= 300
+            m.reply(`▢ *Perdiste*\n\n‣ Tú : ${text}\n‣ DyLux : ${astro}\n\nPuntos *-${poin} XP*`)
         }
-    } else if (text == `${mssg.paper}`) {
-        if (astro == `${mssg.stone}`) {
-            user.limit += poin
-            m.reply(`  ▢ 🪨  📄  ✂️\n\n‣ ${mssg.you} : ${text}\n‣ ${botName}: ${astro}\n\n🎁 ${mssg.win} *+${poin} 🪙*`)
+    } else if (text == 'papel') {
+        if (astro == 'piedra') {
+            global.db.data.users[m.sender].exp += 300
+            m.reply(`▢ *Ganaste* 🎊\n\n‣ Tú : ${text}\n‣ DyLux : ${astro}\n\n🎁 Puntos *+${poin} XP*`)
         } else {
-          user.limit -= poin
-            m.reply(`  ▢ 🪨  📄  ✂️\n\n‣ ${mssg.you} : ${text}\n‣ ${botName}: ${astro}\n\n😔 ${mssg.lost} *-${poin} 🪙*`)
+          global.db.data.users[m.sender].exp -= 300
+            m.reply(`▢ *Perdiste*\n\n‣ Tú : ${text}\n‣ DyLux : ${astro}\n\nPuntos *-${poin} XP*`)
         }
     } else {
         throw reseqv
     }
 }
-handler.help = ['ppt']
+handler.help = ['ppt <piedra/papel/tijera>']
 handler.tags = ['game']
 handler.command = ['ppt'] 
 handler.register = false
 
 export default handler
-
-function msToTime(duration) {
-    var milliseconds = parseInt((duration % 1000) / 100),
-        seconds = Math.floor((duration / 1000) % 60),
-        minutes = Math.floor((duration / (1000 * 60)) % 60),
-        hours = Math.floor((duration / (1000 * 60 * 60)) % 24)
-
-    hours = (hours < 10) ? "0" + hours : hours
-    minutes = (minutes < 10) ? "0" + minutes : minutes
-    seconds = (seconds < 10) ? "0" + seconds : seconds
-
-    return seconds + ` ${mssg.second}`
-}
