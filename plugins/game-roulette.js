@@ -1,10 +1,7 @@
 
 
 let handler = async (m, { conn, args, text, usedPrefix , command }) => {
-
-
-
-
+ 
     let amount = parseInt(args[0])
     let color = args[1]?.toLowerCase()
     if (args.length < 2 )  throw `✳️ Uso de comandos: ${usedPrefix + command} <amount> <color>\n\n Ejemplo: ${usedPrefix + command} 500 red`
