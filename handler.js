@@ -44,12 +44,10 @@ export async function handler(chatUpdate) {
             if (user) {
                 if (!isNumber(user.exp))
                     user.exp = 0
-		if (!isNumber(user.bank))
-                    user.bank = 0 
-		if (!isNumber(user.lasCrime))
-                    user.lasCrime = 0
                 if (!isNumber(user.limit))
                     user.limit = 20
+                if (!isNumber(user.weekly))
+                    user.weekly = 0
                 if (!('registered' in user))
                     user.registered = false
                     //-- user registered 
@@ -81,9 +79,8 @@ export async function handler(chatUpdate) {
             } else
                 global.db.data.users[m.sender] = {
                     exp: 0,
-		    bank: 0,
-                    lasCrime: 0,
                     limit: 20,
+                    weekly: 0,
                     registered: false,
                     name: m.name,
                     age: -1,
@@ -312,7 +309,7 @@ export async function handler(chatUpdate) {
                 else
                     m.exp += xp
                 if (!isPrems && plugin.limit && global.db.data.users[m.sender].limit < plugin.limit * 1) {
-                m.reply(`Se agotaron tus *🍬 Dulces*`)
+                m.reply(`Se agotaron tus *🪙 Coins*`)
                     continue // limit habis
                 }
                 let extra = {
@@ -362,7 +359,7 @@ export async function handler(chatUpdate) {
                         }
                     }
                     if (m.limit)
-                        m.reply(`Utilizaste *${+m.limit}* 🍬`)
+                        m.reply(`Utilizaste *${+m.limit}* 🪙`)
                 }
                 break
             }
@@ -433,7 +430,7 @@ global.dfail = (type, m, conn) => {
         private: '• Esta función solo se puede usar en el chat *privado* de la bot',
         admin: '• Esta función es solo para *admins* del grupo',
         botAdmin: '• Para ejecutar esta función debo ser *administradora*',
-        unreg: 'Regístrese para usar esta función  Escribiendo:\n\n*/reg nombre.edad*\n\n🍭 Ejemplo : */reg おDaniel.666*',
+        unreg: 'Regístrese para usar esta función  Escribiendo:\n\n*/reg nombre.edad*\n\n🍭 Ejemplo : */reg Fabián.17*',
         restrict: '• Esta función está *deshabilitada*',
         nsfw: '• En este grupo está prohibido el contenido +18'
     }[type]
