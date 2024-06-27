@@ -1,38 +1,80 @@
-let handler = async (m) => {
-  let time = global.db.data.users[m.sender].lasCrime + 7200000000;
-  if (new Date() - global.db.data.users[m.sender].lasCrime < 7200000)
-    throw `*𝙴𝚜𝚝𝚊𝚜 𝚌𝚊𝚗𝚜𝚊𝚍𝚘, 𝚍𝚎𝚋𝚎𝚜 𝚍𝚎𝚜𝚌𝚊𝚗𝚜𝚊𝚛 𝚌𝚘𝚖𝚘 𝚖𝚒𝚗𝚒𝚖𝚘 ${msToTime(time - new Date())} 𝚙𝚊𝚛𝚊 𝚟𝚘𝚕𝚟𝚎𝚛 𝚊 cometer un crimen!*`;
-  let result = Math.floor(Math.random() * 10);
-  let reward = Math.floor(Math.random() * 20);
-  if (result > 6) {
-    m.reply(`Tu robo resultó exitoso; de una manera u otra, obtuviste: $${reward} *Coins*`);
-    global.db.data.users[m.sender].limit += reward * 1;
-    global.db.data.users[m.sender].lasCrime = new Date() * 1;
-  } else {
-    m.reply(
-      `¡Tu intento de robo se vio frustrado cuando la policía confiscó lo que habías tomado y te impuso una comisión equivalente a la mitad del dinero robado por tu liberación! Te quitaron: $${
-        reward / 2
-      } *Coins*`
-    );
-    global.db.data.users[m.sender].limit -= Math.floor((reward / 2) * 1);
-    global.db.data.users[m.sender].lasCrime = new Date() * 1;
-  }
-};
-handler.help = ["crime"];
-handler.tags = ["xp"];
-handler.command = ["crime", "crimen"];
-handler.fail = null;
-handler.exp = 0;
-export default handler;
+let cooldowns = {}
 
-function msToTime(duration) {
-  var milliseconds = parseInt((duration % 1000) / 100),
-    seconds = Math.floor((duration / 1000) % 60),
-    minutes = Math.floor((duration / (1000 * 60)) % 60),
-    hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
-  hours = hours < 10 ? "0" + hours : hours;
-  minutes = minutes < 10 ? "0" + minutes : minutes;
-  seconds = seconds < 10 ? "0" + seconds : seconds;
-
-  return minutes + " m " + seconds + " s ";
+let handler = async (m, { conn, text, command, usedPrefix }) => {
+  let users = global.db.data.users
+  let senderId = m.sender
+  let senderName = conn.getName(senderId)
+  
+  let tiempoEspera = 5 * 60
+  if (cooldowns[m.sender] && Date.now() - cooldowns[m.sender] < tiempoEspera * 1000) {
+    let tiempoRestante = segundosAHMS(Math.ceil((cooldowns[m.sender] + tiempoEspera * 1000 - Date.now()) / 1000))
+    m.reply(`🚩 Ya has cometido un Crimen recientemente, espera *⏱ ${tiempoRestante}* para cometer tu próximo Crimen y evitar ser atrapado.`)
+    return
   }
+  
+  cooldowns[m.sender] = Date.now()
+  
+  let senderLimit = users[senderId].limit || 0
+
+  let randomUserId = Object.keys(users)[Math.floor(Math.random() * Object.keys(users).length)]
+
+  while (randomUserId === senderId) {
+    randomUserId = Object.keys(users)[Math.floor(Math.random() * Object.keys(users).length)]
+  }
+
+  let randomUserLimit = users[randomUserId].limit || 0
+
+  let minAmount = 15
+  let maxAmount = 50
+
+  let amountTaken = Math.floor(Math.random() * (maxAmount - minAmount + 1)) + minAmount
+
+  let randomOption = Math.floor(Math.random() * 3)
+
+  switch (randomOption) {
+  case 0:
+  users[senderId].limit = Math.min(senderLimit + amountTaken, maxAmount)
+  users[randomUserId].limit = Math.max(randomUserLimit - amountTaken, 0)
+  conn.sendMessage(m.chat, {
+        text: `🚩¡Lograste cometer tu crimen con exito!, acabas de robar *${amountTaken} 🪙 Coins* a @${randomUserId.split("@")[0]}\n\nSe suman *+${amountTaken} 🪙 Coins* a ${senderName}.`,
+  contextInfo: { 
+  mentionedJid: [randomUserId],
+  }
+  }, { quoted: m })
+  break
+
+  case 1:
+  let amountSubtracted = Math.min(Math.floor(Math.random() * (senderLimit - minAmount + 1)) + minAmount, maxAmount)
+  users[senderId].limit = Math.max(senderLimit - amountSubtracted, 0)
+  conn.reply(m.chat, `🚩 No fuiste cuidadoso y te atraparon mientras cometias tu cirme, se restaron *-${amountSubtracted} 🪙 Coins* a ${senderName}.`, m)
+  break
+
+  case 2:
+  let smallAmountTaken = Math.min(Math.floor(Math.random() * (randomUserLimit / 2 - minAmount + 1)) + minAmount, maxAmount)
+  users[senderId].limit = Math.min(senderLimit + smallAmountTaken, maxAmount)
+  users[randomUserId].limit = Math.max(randomUserLimit - smallAmountTaken, 0)
+  conn.sendMessage(m.chat, {
+  text: `🚩 Lograste cometer tu crimen con exito, pero te descubrieron y solo lograste tomar *${smallAmountTaken} 🪙 Coins* de @${randomUserId.split("@")[0]}\n\nSe suman *+${smallAmountTaken} 🪙 Coins* a ${senderName}.`,
+  contextInfo: { 
+  mentionedJid: [randomUserId],
+  }
+  }, { quoted: m })
+  break
+  }
+  
+  global.db.write()
+}
+handler.tags = ['rpg']
+handler.help = ['crimen']
+handler.command = ['crimen', 'crime']
+handler.register = true
+handler.group = true
+
+export default handler
+
+function segundosAHMS(segundos) {
+  let horas = Math.floor(segundos / 3600)
+  let minutos = Math.floor((segundos % 3600) / 60)
+  let segundosRestantes = segundos % 60
+  return `${minutos} minutos y ${segundosRestantes} segundos`
+                 }
